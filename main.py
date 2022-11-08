@@ -21,7 +21,6 @@ import asyncio
 import json
 import string
 from datetime import datetime, timedelta
-from pytimeparse.timeparse import timeparse
 
 chars = string.ascii_uppercase + string.digits
 
