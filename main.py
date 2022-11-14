@@ -1,13 +1,13 @@
 #---------- SETTINGS ----------#
 
 
-database_path = r"D:\Coding\BirthdayCord\birthdays.json"  #Fichier .json obligatoire (si ça bug mets r"birthdays.json")
+database_path = r"birthdays.json"  #Fichier .json obligatoire (r"birthdays.json" est recommandé)
 
-channel_id = 1038482178507558924  # L'ID du channel (for Midnight it's 1026534852637499442)
+channel_id = 965582377869000704  # L'ID du channel dans lequel les anniversaires sont annoncés
 
-ping_role_id = 1038482779756822678  # L'ID du rôle à ping pour les annivs
+ping_role_id = 779446074989215774  # L'ID du rôle à ping pour les annivs
 
-prefix = "&&"
+prefix = "&"
 
 
 
@@ -16,15 +16,12 @@ prefix = "&&"
 import os
 from discord.ext import commands
 import discord
-from dotenv import load_dotenv
 import asyncio
 import json
 import string
 from datetime import datetime, timedelta
 
 chars = string.ascii_uppercase + string.digits
-
-load_dotenv()
 
 clear = lambda: os.system("cls || clear")
 intents = discord.Intents().all()
@@ -104,12 +101,14 @@ async def birthday(ctx, date):
 
     if str(ctx.author.id) not in birthdays.keys():
         db.add(anniv, ctx.author.id)
+        print(f"[+] Added {ctx.author.id}'s birthday")
         await ctx.reply(f"Date d'anniversaire ajoutée avec succès 🎉 (`{anniv}`)")
         return
 
     else:
         db.remove(ctx.author.id)
         db.add(anniv, ctx.author.id)
+        print(f"[+] Edited {ctx.author.id}'s birthday")
         await ctx.reply(f"Date d'anniversaire modifiée avec succès 🎉 (`{anniv}`)")
 
     print(f"[+] Added new birthday : {ctx.author}")
@@ -147,8 +146,7 @@ async def on_ready():
             for key in data:
                 if data[key][0] in ajd:
                     if data[key][1] == False:
-                        #joyyx anniv
-
+                        #joyeux anniv
                         print(key)
                         id = int(key)
                         channel = bot.get_channel(channel_id)
@@ -165,7 +163,7 @@ async def on_ready():
 async def help(ctx):
     helpmsg = f"""**Commandes**
 ```
-{prefix}birthday <date> | Rajoute ton anniversaire à la liste ou le modifie.
+{prefix}birthday <jour/mois> | Rajoute ton anniversaire à la liste ou le modifie.
 
 {prefix}remove | Retire ton anniversaire de la liste.
 ```
@@ -177,5 +175,6 @@ async def help(ctx):
     embed.set_footer(text="Dev par Epsi#0001 :)")
     await ctx.reply(embed=embed)
 
-token = os.getenv("TOKEN")
+with open("env", "r") as f:
+    token = f.read()
 bot.run(token)
