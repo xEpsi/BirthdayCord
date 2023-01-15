@@ -142,7 +142,7 @@ async def on_ready():
         ajd = now.strftime("%d/%m")
         heure = int(now.strftime("%H"))
 
-        if heure == 18:
+        if heure == 0:
             for key in data:
                 if data[key][0] in ajd:
                     if data[key][1] == False:
